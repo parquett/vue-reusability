@@ -1,26 +1,37 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+<div class="container">
+  <div class="card">
+    <h2>{{$localization('app.title')}}</h2>
+    <button class="btn" @click="changeLang()">
+      {{$localization('app.langBtn')}}</button>
+  </div>
+</div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
 
 export default {
   name: 'App',
-  components: {
-    HelloWorld
+  inject: ['translate', 'getLang', 'languages'],
+  data() {
+    return {
+      currentId: -1
+    }
+  },
+  mounted() {
+    let currentObj = this.languages.find(lang => lang.name === this.getLang())
+    this.currentId = this.languages.indexOf(currentObj)
+  },
+  methods: {
+    changeLang() {
+      this.currentId++;
+      if(this.currentId === this.languages.length) 
+          this.currentId = 0
+      
+      let currentLanguage = this.languages[this.currentId].name
+      this.translate(currentLanguage)
+      this.$forceUpdate()
+    }
   }
 }
 </script>
-
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
